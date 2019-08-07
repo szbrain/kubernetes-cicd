@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: ReplicationController  
-metadata:  
-  name: koolearn-eureka-controller
+metadata:
+  name: kubernetes-cicd-eureka-controller
 spec:  
   replicas: 2                            
   selector:  
-    name: eureka
+    name: kubernetes-cicd-eureka
   template:  
     metadata:  
       labels:
-        name: eureka
+        name: kubernetes-cicd-eureka
     spec:  
       containers:  
-        - name: koolearn-eureka
-          image: registry.cn-hangzhou.aliyuncs.com/lvyangjun/koolearn-eureka:v1.4.1
+        - name: kubernetes-cicd-eureka
+          image: registry.cn-hangzhou.aliyuncs.com/lvyangjun/kubernetes-cicd-eureka:v1.4.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8111

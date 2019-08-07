@@ -46,14 +46,7 @@
             <version>1.3.1.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-client</artifactId>
-            <version>${spring-boot-admin.version}</version>
-        </dependency>
-
         <!--spring-boot-->
-
 
         <!--spring-boot-dubbo-->
         <dependency>
@@ -87,7 +80,11 @@
             <artifactId>kubernetes-cicd-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 修改配置文件
     </dependencies>
 
     <build>
