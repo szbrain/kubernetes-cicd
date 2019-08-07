@@ -11,8 +11,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
   </properties>  
   <modules>
-    <module>api</module>
-    <module>eureka</module>
-    <module>webapp</module>
+    <module>kubernetes-cicd-api</module>
+    <module>kubernetes-cicd-eureka</module>
+    <module>kubernetes-cicd-webapp</module>
   </modules> 
 </project>
