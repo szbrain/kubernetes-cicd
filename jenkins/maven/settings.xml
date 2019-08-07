@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  
+  <!--<localRepository>your path</localRepository> -->
+  <pluginGroups>
+    <pluginGroup>org.mortbay.jetty</pluginGroup>
+  </pluginGroups>
+  <proxies>
+  </proxies>
+  <servers>
+    <server>
+		<id>releases</id>
+    <username>lilong01</username>
+    <password>lilong01A</password>
+	</server>
+	<server>
+		<id>snapshots</id>
+    <username>lilong01</username>
+    <password>lilong01A</password>
+	</server>
+  </servers>
+  <mirrors>
+  </mirrors>
+  <profiles>
+  
+    <profile>
+        <id>dev-nexus</id>
+        <repositories>
+            <repository>
+                <id>local-nexus</id>
+                <url>http://maven.koolearn-inc.com/nexus/content/groups/public/</url>
+                <releases>
+                    <enabled>true</enabled>
+                    <updatePolicy>daily</updatePolicy>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                    <updatePolicy>always</updatePolicy>
+                </snapshots>
+            </repository>
+        </repositories>
+        <pluginRepositories>
+            <pluginRepository>
+                <id>local-nexus</id>
+                <url>http://maven.koolearn-inc.com/nexus/content/groups/public</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </pluginRepository>
+        </pluginRepositories>
+    </profile>
+    <profile>
+        <id>sonar</id>
+        <activation>
+           <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties> 
+            <!-- SERVER ON A REMOTE HOST-->
+            <sonar.host.url>http://sonar.koolearn-inc.com</sonar.host.url>
+        </properties>
+    </profile>
+  </profiles>
+  
+  <activeProfiles>
+    <activeProfile>dev-nexus</activeProfile>
+  </activeProfiles>
+</settings>

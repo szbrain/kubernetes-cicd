@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koolearn.club.mapper.ActivityMapper">
+    <sql id="Base_Column_List">id, class_id, activity_name, start_time, end_time,type,status,trigger_rule,rule,activity_url,h5_url,activity_template,slogan,create_time,update_time</sql>
+
+    <sql id="Relation_Column_List">a.id, a.class_id, a.activity_name, a.start_time, a.end_time,a.type,a.status,a.trigger_rule,a.rule,a.activity_url,a.h5_url,a.activity_template,a.slogan,a.create_time,a.update_time</sql>
+
+
+    <resultMap id="BaseResultMap" type="com.koolearn.club.entity.PeActivity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="class_id" property="classId" jdbcType="INTEGER"/>
+        <result column="activity_name" property="activityName" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="trigger_rule" property="triggerRule" jdbcType="TINYINT"/>
+        <result column="rule" property="rule" jdbcType="VARCHAR"/>
+        <result column="activity_url" property="activityUrl" jdbcType="VARCHAR"/>
+        <result column="h5_url" property="h5Url" jdbcType="VARCHAR"/>
+        <result column="activity_template" property="activityTemplate" jdbcType="VARCHAR"/>
+        <result column="slogan" property="slogan" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="activityDetail" parameterType="com.koolearn.club.dto.activity.ActivityDetailReqDTO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pe_activity
+        where id=#{activityId}
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.koolearn.club.entity.PeActivity">
+        insert into pe_activity(
+        class_id, activity_name, start_time, end_time,type,status,trigger_rule,rule,activity_url,h5_url,activity_template,slogan,create_time
+        )
+        values(
+        #{classId}, #{activityName}, #{startTime},#{endTime},#{type},#{status},#{triggerRule},#{rule},#{activityUrl},#{h5Url},#{activityTemplate},#{slogan},#{createTime}
+        )
+    </insert>
+
+    <select id="listByClassId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pe_activity
+        where class_id=#{classId}
+    </select>
+
+
+    <select id="activityList" parameterType="com.koolearn.club.dto.activity.ActivityListReqDTO" resultMap="BaseResultMap">
+        select
+        <include refid="Relation_Column_List"/>
+        from pe_activity a
+        <where>
+            <if test=" classId != null and classId!= ''">
+               AND a.class_id = #{classId}
+            </if>
+            <if test=" activityId != null and activityId != ''">
+                AND a.id =#{activityId}
+            </if>
+            <if test=" activityName!= null and activityName != ''">
+                AND a.activity_name=#{activityName}
+            </if>
+            <if test=" startTime!= null and startTime!= ''">
+                AND a.create_time &gt; #{startTime}
+            </if>
+            <if test=" endTime!= null and endTime!= ''">
+                AND a.create_time &lt; #{endTime}
+            </if>
+            <if test=" type!= null and type!= ''">
+                AND a.type=#{type}
+            </if>
+            <if test=" status!= null and status!= ''">
+                AND a.status=#{status}
+            </if>
+            <if test=" joinCountLowerLimit!= null and joinCountLowerLimit!= ''">
+                AND (select count(DISTINCT(uid)) from pe_award_record WHERE activity_id = a.id) &gt; #{joinCountLowerLimit}
+            </if>
+            <if test=" joinCountUpperLimit!= null and joinCountUpperLimit!= ''">
+                AND (select count(DISTINCT(uid)) from pe_award_record WHERE activity_id = a.id) &lt; #{joinCountUpperLimit}
+            </if>
+        </where>
+        order by a.create_time desc limit #{offset},#{pageSize}
+    </select>
+
+
+    <select id="listCount" parameterType="com.koolearn.club.dto.activity.ActivityListReqDTO" resultType="java.lang.Integer">
+        select count(a.id) from pe_activity a
+        <where>
+            <if test=" classId != null and classId!= ''">
+                AND a.class_id = #{classId}
+            </if>
+            <if test=" activityId != null and activityId != ''">
+                AND a.id =#{activityId}
+            </if>
+            <if test=" activityName!= null and activityName != ''">
+                AND a.activity_name=#{activityName}
+            </if>
+            <if test=" startTime!= null and startTime!= ''">
+                AND a.create_time &gt; #{startTime}
+            </if>
+            <if test=" endTime!= null and endTime!= ''">
+                AND a.create_time &lt; #{endTime}
+            </if>
+            <if test=" type!= null and type!= ''">
+                AND a.type=#{type}
+            </if>
+            <if test=" status!= null and status!= ''">
+                AND a.status=#{status}
+            </if>
+            <if test=" joinCountLowerLimit!= null and joinCountLowerLimit!= ''">
+                AND (select count(DISTINCT(uid)) from pe_award_record WHERE activity_id = a.id) &gt; #{joinCountLowerLimit}
+            </if>
+            <if test=" joinCountUpperLimit!= null and joinCountUpperLimit!= ''">
+                AND (select count(DISTINCT(uid)) from pe_award_record WHERE activity_id = a.id) &lt; #{joinCountUpperLimit}
+            </if>
+        </where>
+    </select>
+
+    <update id="editActivity" parameterType="com.koolearn.club.dto.activity.ActivityEditReqDTO">
+        update pe_activity
+        <set>
+            <if test="triggerRule!=null and triggerRule!=''">trigger_rule=#{triggerRule},</if>
+            <if test="rule!=null and rule!=''">rule=#{rule},</if>
+            <if test="activityUrl!=null and activityUrl!=''">activity_url=#{activityUrl},</if>
+            <if test="h5Url!=null and h5Url!=''">h5_url=#{h5Url},</if>
+            <if test="activityTemplate!=null and activityTemplate!=''">activity_template=#{activityTemplate},</if>
+            <if test="slogan!=null and slogan!=''">slogan=#{slogan},</if>
+        </set>
+        where id =#{activityId}
+    </update>
+
+    <select id="getActivityByClassIdAndTriggerRule" parameterType="com.koolearn.club.dto.award.CheckAwardReqDTO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pe_activity
+        where class_id=#{classId} and trigger_rule=#{triggerRule}
+        AND status = 1
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pe_activity
+        where id=#{id}
+    </select>
+
+    <update id="updateStatus">
+        update pe_activity
+        set status = #{status}
+        where id=#{id}
+    </update>
+
+
+</mapper>

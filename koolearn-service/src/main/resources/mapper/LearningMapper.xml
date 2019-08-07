@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koolearn.club.mapper.LearningMapper">
+  <sql id="Base_Column_List">id, class_id, stu_id, `type`, status, content, start_time, end_time, resource_ids, is_praise, is_comment, praise_type, is_reminded, update_time</sql>
+  <resultMap id="BaseResultMap" type="com.koolearn.club.entity.PeLearning">
+      <id column="id" property="id" jdbcType="INTEGER"/>
+      <result column="class_id" property="classId" jdbcType="INTEGER"/>
+      <result column="stu_id" property="stuId" jdbcType="INTEGER"/>
+      <result column="type" property="type" jdbcType="TINYINT"/>
+      <result column="status" property="status" jdbcType="TINYINT"/>
+      <result column="content" property="content" jdbcType="VARCHAR"/>
+      <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+      <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+      <result column="resource_ids" property="resourceIds" jdbcType="VARCHAR"/>
+      <result column="is_praise" property="isPraise" jdbcType="TINYINT"/>
+      <result column="is_comment" property="isComment" jdbcType="TINYINT"/>
+      <result column="praise_type" property="praiseType" jdbcType="TINYINT"/>
+      <result column="is_reminded" property="isReminded" jdbcType="TINYINT"/>
+      <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where id=#{id} and is_delete != 1
+    </select>
+
+    <select id="learning" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where class_id=#{classId} and stu_id=#{stuId} and is_delete != 1 and end_time is null
+        limit 1
+    </select>
+
+    <select id="otherLearningHistory" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where class_id=#{classId}
+        and is_delete != 1
+        and to_days(end_time) = to_days(#{dateTime})
+        and end_time &lt;#{dateLine}
+        order by end_time DESC
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="otherLearningHistoryOfV1" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where class_id=#{classId}
+        and is_delete != 1
+        and to_days(end_time) = to_days(#{dateTime})
+        order by end_time DESC
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="listHistoryForStu" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where class_id=#{classId} and stu_id=#{stuId} and is_delete != 1 and  to_days(end_time) = to_days(#{dateTime})
+        order by end_time DESC
+    </select>
+
+
+    <select id="listHistoryForStuOfV2" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where class_id=#{classId} and stu_id=#{stuId} and is_delete != 1
+        order by end_time DESC
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="countHistoryForStuOfV2" resultType="java.lang.Integer">
+        select count(id) from pe_learning
+        where class_id=#{classId} and stu_id=#{stuId} and is_delete != 1
+    </select>
+
+    <select id="listHistoryForTech" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where class_id=#{classId} and is_delete != 1
+        and  to_days(end_time) = to_days(#{dateTime})
+        and end_time &lt;#{dateLine}
+        order by end_time DESC
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="listHistoryForTechOfV1" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where class_id=#{classId} and is_delete != 1
+        and  to_days(end_time) = to_days(#{dateTime})
+        order by end_time DESC
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="countOtherLearningHistory" resultType="java.lang.Integer">
+        select count(id) from pe_learning
+        where class_id=#{classId}
+        and is_delete != 1
+        and end_time &lt;#{dateLine}
+        and to_days(end_time) = to_days(#{dateTime})
+    </select>
+
+    <select id="countOtherLearningHistoryOfV1" resultType="java.lang.Integer">
+        select count(id) from pe_learning
+        where class_id=#{classId}
+        and is_delete != 1
+        and to_days(end_time) = to_days(#{dateTime})
+    </select>
+
+    <select id="countHistoryForTech" resultType="java.lang.Integer">
+        select count(id) from pe_learning
+        where class_id=#{classId} and is_delete != 1
+        and  to_days(end_time) = to_days(#{dateTime})
+        and end_time &lt;#{dateLine}
+    </select>
+
+    <select id="countHistoryForTechOfV1" resultType="java.lang.Integer">
+        select count(id) from pe_learning
+        where class_id=#{classId} and is_delete != 1
+        and  to_days(end_time) = to_days(#{dateTime})
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.koolearn.club.entity.PeLearning">
+        insert into pe_learning(
+        class_id, stu_id, `type`, status, content, start_time, end_time, resource_ids
+        )
+        values(
+        #{classId}, #{stuId}, #{type}, #{status}, #{content}, #{startTime}, #{endTime}, #{resourceIds}
+        )
+    </insert>
+
+
+    <select id="getByStuIdClassId" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where class_id=#{classId} and stu_id = #{stuId} and status = 1 and is_delete != 1
+        limit 1
+    </select>
+
+
+    <update id="update" parameterType="com.koolearn.club.entity.PeLearning">
+        update pe_learning
+        set `type` = #{type},
+        status = #{status},
+        content = #{content},
+        end_time = #{endTime},
+        resource_ids = #{resourceIds}
+        where id=#{id}
+    </update>
+
+    <update id="updateIsPraise">
+        update pe_learning
+        set is_praise = 1,
+        praise_type = #{praiseType}
+        where id=#{id}
+    </update>
+
+    <update id="updateIsComment" parameterType="java.lang.Integer">
+        update pe_learning
+        set is_comment = 1
+        where id=#{id}
+    </update>
+
+    <update id="deleteById" parameterType="java.lang.Integer">
+        update pe_learning
+        set is_delete = 1
+        where id=#{id}
+    </update>
+
+
+    <select id="listForStuLearning" resultType="java.lang.String">
+       select DISTINCT DATE_FORMAT(end_time,'%Y-%m-%d') as day
+       from pe_learning where class_id = #{classId} and stu_id = #{stuId} and is_delete != 1
+    </select>
+
+    <select id="countLearning" resultType="java.lang.Integer">
+        select count(DISTINCT (stu_id)) from pe_learning
+        where class_id=#{classId} and is_delete != 1
+        and  to_days(end_time) = to_days(#{statDate})
+    </select>
+
+
+    <update id="updateIsReminded" parameterType="java.lang.Integer">
+        update pe_learning
+        set is_reminded = 1
+        where id=#{id}
+    </update>
+
+
+    <select id="listByStuId" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_learning
+        where stu_id=#{stuId} and is_delete != 1
+        order by end_time DESC
+    </select>
+
+</mapper>

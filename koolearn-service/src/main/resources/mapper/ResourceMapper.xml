@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koolearn.club.mapper.ResourceMapper">
+  <sql id="Base_Column_List">id, `type`, path, sn, `name`, duration, create_time</sql>
+  <resultMap id="BaseResultMap" type="com.koolearn.club.entity.PeResource">
+      <id column="id" property="id" jdbcType="INTEGER"/>
+      <result column="type" property="type" jdbcType="TINYINT"/>
+      <result column="path" property="path" jdbcType="VARCHAR"/>
+      <result column="sn" property="sn" jdbcType="INTEGER"/>
+      <result column="name" property="name" jdbcType="VARCHAR"/>
+      <result column="duration" property="duration" jdbcType="INTEGER"/>
+      <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_resource
+        where id=#{id} and is_delete != 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.koolearn.club.entity.PeResource">
+        insert into pe_resource(
+        `type`, path, sn, `name`, duration, create_time
+        )
+        values(
+        #{type}, #{path}, #{sn}, #{name}, #{duration}, #{createTime}
+        )
+    </insert>
+
+    <update id="batchDelete" parameterType="java.lang.Integer">
+        update pe_resource
+        set is_delete = 1
+        where id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+    </update>
+
+
+</mapper>

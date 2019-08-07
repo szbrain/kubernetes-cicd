@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koolearn.club.mapper.RedPocketRecordMapper">
+
+
+    <sql id="Base_Column_List">id, activity_id, uid, amount,create_time</sql>
+
+    <sql id="Relation_Column_List">a.id, a.activity_id, a.uid, a.amount,a.create_time</sql>
+
+    <resultMap id="BaseResultMap" type="com.koolearn.club.entity.PeRedPocketRecord">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="activity_id" property="activityId" jdbcType="INTEGER"/>
+        <result column="uid" property="uid" jdbcType="INTEGER"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <!-- 插入中奖记录-->
+    <insert id="addRedPockrtRecord" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.koolearn.club.entity.PeRedPocketRecord">
+            INSERT INTO pe_red_pocket_record (activity_id, uid, amount,create_time) VALUES (#{activityId},#{uid},#{amount},#{createTime})
+    </insert>
+
+    <select id="getListByUserId" parameterType="com.koolearn.club.dto.award.CheckAwardReqDTO"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pe_red_pocket_record
+        <where>
+            <if test=" stuId != null">
+                AND uid = #{stuId}
+            </if>
+            <if test=" activityId != null">
+                AND activity_id = #{activityId} AND to_days(create_time) = to_days(now())
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getEveryDayAmountByActivityId" resultType="java.math.BigDecimal"
+            parameterType="java.lang.Integer">
+        select sum(amount) from pe_red_pocket_record
+        <where>
+            <if test="activityId != null">
+                AND activity_id = #{activityId} AND to_days(create_time) = to_days(now())
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllAmountByActivityId" resultType="java.math.BigDecimal"
+            parameterType="java.lang.Integer">
+        select sum(amount) from pe_red_pocket_record
+        <where>
+            <if test="activityId != null">
+                AND activity_id = #{activityId}
+            </if>
+        </where>
+    </select>
+
+    <select id="joinUserTotal" resultType="java.lang.Integer">
+        select COUNT(b.uid) FROM (select DISTINCT a.uid from pe_red_pocket_record a WHERE a.activity_id = #{activityId}) b;
+    </select>
+
+    <select id="joinTotal" resultType="java.lang.Integer">
+        select count(id) from pe_red_pocket_record WHERE activity_id = #{activityId}
+    </select>
+
+    <select id="todayJoinUserTotal" resultType="java.lang.Integer">
+        select COUNT(b.uid) FROM (select DISTINCT a.uid from pe_red_pocket_record a WHERE a.activity_id = #{activityId} AND to_days(a.create_time) = to_days(now())) b;
+    </select>
+
+    <select id="todayJoinTotal" resultType="java.lang.Integer">
+        select count(id) from pe_red_pocket_record WHERE activity_id = #{activityId} AND to_days(create_time) = to_days(now())
+    </select>
+
+
+    <select id="redPocketRecordList" resultMap="BaseResultMap">
+        select
+        <include refid="Relation_Column_List"/>
+        from pe_red_pocket_record a
+        left join pe_student b on a.uid = b.id
+        <where>
+            <if test="activityId != null">a.activity_id = #{activityId}</if>
+            <if test="startCreateTime != null and startCreateTime != ''">and a.create_time &gt;= #{startCreateTime}</if>
+            <if test="endCreateTime != null and endCreateTime != ''">and a.create_time &lt;= #{endCreateTime}</if>
+            <if test="nickname != null and nickname != ''">and b.nickname like CONCAT('%',#{nickname},'%')</if>
+            <if test="amountMin != null">and a.amount &gt;= #{amountMin}</if>
+            <if test="amountMax != null ">and a.amount &lt;= #{amountMax}</if>
+        </where>
+        order by a.create_time desc
+        limit #{offset},#{pageSize}
+    </select>
+
+
+    <select id="redPocketRecordListCount" resultType="java.lang.Integer">
+        select
+        count(a.id)
+        from pe_red_pocket_record a
+        left join pe_student b on a.uid = b.id
+        <where>
+            <if test="activityId != null">a.activity_id = #{activityId}</if>
+            <if test="startCreateTime != null and startCreateTime != ''">and a.create_time &gt;= #{startCreateTime}</if>
+            <if test="endCreateTime != null and endCreateTime != ''">and a.create_time &lt;= #{endCreateTime}</if>
+            <if test="nickname != null and nickname != ''">and b.nickname like CONCAT('%',#{nickname},'%')</if>
+            <if test="amountMin != null">and a.amount &gt;= #{amountMin}</if>
+            <if test="amountMax != null ">and a.amount &lt;= #{amountMax}</if>
+        </where>
+    </select>
+
+    <select id="export" resultMap="BaseResultMap">
+        select
+        <include refid="Relation_Column_List"/>
+        from pe_red_pocket_record a
+        left join pe_student b on a.uid = b.id
+        <where>
+            <if test="activityId != null">a.activity_id = #{activityId}</if>
+            <if test="startCreateTime != null and startCreateTime != ''">and a.create_time &gt;= #{startCreateTime}</if>
+            <if test="endCreateTime != null and endCreateTime != ''">and a.create_time &lt;= #{endCreateTime}</if>
+            <if test="nickname != null and nickname != ''">and b.nickname like CONCAT('%',#{nickname},'%')</if>
+            <if test="amountMin != null">and a.amount &gt;= #{amountMin}</if>
+            <if test="amountMax != null ">and a.amount &lt;= #{amountMax}</if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+
+
+
+</mapper>

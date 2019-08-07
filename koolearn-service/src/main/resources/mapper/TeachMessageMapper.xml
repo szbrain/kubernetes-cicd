@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koolearn.club.mapper.TeachMessageMapper">
+  <sql id="Base_Column_List">id, business_id, channel_id, `type`, create_time</sql>
+  <resultMap id="BaseResultMap" type="com.koolearn.club.entity.PeTeachMessage">
+      <id column="id" property="id" jdbcType="INTEGER"/>
+      <result column="business_id" property="businessId" jdbcType="INTEGER"/>
+      <result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+      <result column="type" property="type" jdbcType="TINYINT"/>
+      <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_teach_message
+        where id=#{id} and is_delete != 1
+    </select>
+
+    <select id="listByChannelId" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_teach_message
+        where channel_id=#{channelId} and is_delete != 1
+        order by create_time desc
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="countByChannelId" resultType="java.lang.Integer">
+        select count(id) from pe_teach_message
+        where channel_id=#{channelId} and is_delete != 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.koolearn.club.entity.PeTeachMessage">
+        insert into pe_teach_message(
+        business_id, channel_id, `type`, create_time)
+        values(
+        #{businessId}, #{channelId}, #{type}, #{createTime})
+    </insert>
+</mapper>

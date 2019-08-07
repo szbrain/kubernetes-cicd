@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koolearn.club.mapper.LiveMapper">
+
+  <sql id="Base_Column_List">id, task_id, status, push_url, play_flv_url, play_hls_url, play_rtmp_url, cover_url, title, speaker, introduction, notice, open_time, end_time, im_group_id, online_count, online_time, create_time, update_time</sql>
+
+  <sql id="Relation_Column_List">a.id, a.task_id, a.status, a.push_url, a.play_flv_url, a.play_hls_url, a.play_rtmp_url, a.cover_url, a.title, a.speaker, a.introduction, a.notice, a.open_time, a.end_time, a.im_group_id, a.online_count, a.online_time, a.create_time, a.update_time</sql>
+
+
+  <resultMap id="BaseResultMap" type="com.koolearn.club.entity.PeLive">
+      <id column="id" property="id" jdbcType="INTEGER"/>
+      <result column="task_id" property="taskId" jdbcType="INTEGER"/>
+      <result column="status" property="status" jdbcType="TINYINT"/>
+      <result column="push_url" property="pushUrl" jdbcType="VARCHAR"/>
+      <result column="play_flv_url" property="playFlvUrl" jdbcType="VARCHAR"/>
+      <result column="play_hls_url" property="playHlsUrl" jdbcType="VARCHAR"/>
+      <result column="play_rtmp_url" property="playRtmpUrl" jdbcType="VARCHAR"/>
+      <result column="cover_url" property="coverUrl" jdbcType="VARCHAR"/>
+      <result column="title" property="title" jdbcType="VARCHAR"/>
+      <result column="speaker" property="speaker" jdbcType="VARCHAR"/>
+      <result column="introduction" property="introduction" jdbcType="VARCHAR"/>
+      <result column="notice" property="notice" jdbcType="VARCHAR"/>
+      <result column="open_time" property="openTime" jdbcType="TIMESTAMP"/>
+      <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+      <result column="im_group_id" property="imGroupId" jdbcType="VARCHAR"/>
+      <result column="online_count" property="onlineCount" jdbcType="INTEGER"/>
+      <result column="online_time" property="onlineTime" jdbcType="TIMESTAMP"/>
+      <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+      <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_live
+        where id=#{id} and is_delete != 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.koolearn.club.entity.PeLive">
+        insert into pe_live(
+        task_id, status, push_url, play_flv_url, play_hls_url, play_rtmp_url, cover_url, title, speaker, introduction, notice, open_time, end_time, im_group_id, create_time
+        )
+        values(
+        #{taskId}, #{status}, #{pushUrl}, #{playFlvUrl}, #{playHlsUrl}, #{playRtmpUrl}, #{coverUrl}, #{title}, #{speaker}, #{introduction}, #{notice}, #{openTime}, #{endTime}, #{imGroupId}, #{createTime}
+        )
+    </insert>
+
+
+    <select id="listByClassId" resultMap="BaseResultMap">
+        select <include refid="Relation_Column_List"/> from pe_live a
+        left join pe_task b on a.task_id = b.id
+        where a.is_delete != 1 and b.is_delete != 1 and b.class_id = #{classId}
+        order by b.create_time desc
+        limit #{offset},#{pageSize}
+    </select>
+
+
+    <select id="countByClassId" resultType="java.lang.Integer">
+        select count(id) from pe_task
+        where class_id = #{classId} and is_delete != 1
+    </select>
+
+    <select id="getByTaskId" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_live
+        where task_id=#{taskId} and is_delete != 1
+        limit 1
+    </select>
+
+    <update id="update" parameterType="com.koolearn.club.entity.PeLive">
+        update pe_live
+        set cover_url = #{coverUrl},
+        title = #{title},
+        push_url = #{pushUrl},
+        play_flv_url = #{playFlvUrl},
+        play_hls_url = #{playHlsUrl},
+        play_rtmp_url = #{playRtmpUrl},
+        speaker = #{speaker},
+        introduction = #{introduction},
+        notice = #{notice},
+        open_time = #{openTime},
+        end_time = #{endTime}
+        where id=#{id}
+    </update>
+
+    <update id="updateStatus">
+        update pe_live
+        set status = #{status}
+        where id=#{id}
+    </update>
+
+
+    <update id="updateOnlineCount">
+        update pe_live
+        set online_count = #{memberNum},
+        online_time = #{date}
+        where id=#{id}
+    </update>
+
+
+    <update id="updateNoticeByTaskId">
+        update pe_live
+        set notice = #{notice}
+        where task_id = #{taskId}
+    </update>
+
+    <update id="updatePlayUrl">
+        update pe_live
+        set play_flv_url = #{playUrl}
+        where task_id = #{taskId}
+    </update>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.koolearn.club.mapper.WithdrawRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.koolearn.club.entity.PeWithdrawRecord">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="uid" property="uid" jdbcType="INTEGER"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="partner_trade_no" property="partnerTradeNo" jdbcType="VARCHAR"/>
+        <result column="payment_no" property="paymentNo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="payment_time" property="paymentTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="response_xml" property="responseXml" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id,uid, amount, partner_trade_no, payment_no, status,payment_time, create_time, update_time,response_xml
+    </sql>
+
+    <insert id="addWithdrawRecord" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.koolearn.club.entity.PeWithdrawRecord">
+    insert into pe_withdraw_record (uid, amount, partner_trade_no, payment_no, status,payment_time, create_time,response_xml)
+    values(#{uid},#{amount}, #{partnerTradeNo}, #{paymentNo}, #{status},#{paymentTime},#{createTime},#{responseXml})
+    </insert>
+
+</mapper>

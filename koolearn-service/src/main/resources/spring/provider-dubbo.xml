@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://code.alibabatech.com/schema/dubbo
+                           http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+       default-autowire="byName" default-lazy-init="false">
+
+    <dubbo:service interface="com.koolearn.club.service.IClassService" ref="classService"/>
+    <dubbo:service interface="com.koolearn.club.service.IClassContentService" ref="classContentService"/>
+    <dubbo:service interface="com.koolearn.club.service.IClassNoticeService" ref="classNoticeService"/>
+    <dubbo:service interface="com.koolearn.club.service.IResourceService" ref="resourceService"/>
+    <dubbo:service interface="com.koolearn.club.service.ILearningService" ref="signService"/>
+    <dubbo:service interface="com.koolearn.club.service.ILearningCommentService" ref="signCommentService"/>
+    <dubbo:service interface="com.koolearn.club.service.IStudentService" ref="studentService"/>
+    <dubbo:service interface="com.koolearn.club.service.ITaskService" ref="taskService"/>
+    <dubbo:service interface="com.koolearn.club.service.ITeacherService" ref="teacherService"/>
+    <dubbo:service interface="com.koolearn.club.service.IStuMessageService" ref="messageService"/>
+    <dubbo:service interface="com.koolearn.club.service.ITeachMessageService" ref="teachMessageService"/>
+    <dubbo:service interface="com.koolearn.club.service.IChannelService" ref="channelService"/>
+    <dubbo:service interface="com.koolearn.club.service.IFormIdService" ref="formIdService"/>
+    <dubbo:service interface="com.koolearn.club.service.IClassCommentService" ref="classCommentService"/>
+    <dubbo:service interface="com.koolearn.club.service.IClassShareRecordService" ref="classShareRecordService"/>
+    <dubbo:service interface="com.koolearn.club.service.IScheduleService" ref="scheduleService"/>
+    <dubbo:service interface="com.koolearn.club.service.IShareService" ref="shareService"/>
+    <dubbo:service interface="com.koolearn.club.service.IIdentifyingCodeService" ref="identifyingCodeService"/>
+    <dubbo:service interface="com.koolearn.club.service.ILearningPraiseService" ref="learningPraiseService"/>
+    <dubbo:service interface="com.koolearn.club.service.IStudentSettingService" ref="studentSettingService"/>
+    <dubbo:service interface="com.koolearn.club.service.ILiveService" ref="liveService"/>
+    <dubbo:service interface="com.koolearn.club.service.IWechatService" ref="wechatService"/>
+    <dubbo:service interface="com.koolearn.club.service.IDrawAwardService" ref="drawAwardService"/>
+    <dubbo:service interface="com.koolearn.club.service.IActivityService" ref="activityService"/>
+    <dubbo:service interface="com.koolearn.club.service.ITeachTokenService" ref="teachTokenService"/>
+    <dubbo:service interface="com.koolearn.club.service.ISquareService" ref="squareService"/>
+    <dubbo:service interface="com.koolearn.club.service.IAwardRecordService" ref="awardRecordService"/>
+    <dubbo:service interface="com.koolearn.club.service.ICommentService" ref="commentService"/>
+    <dubbo:service interface="com.koolearn.club.service.IRedPocketRuleService" ref="redPocketRuleService"/>
+    <dubbo:service interface="com.koolearn.club.service.IRedPocketRecordService" ref="redPocketRecordService"/>
+    <dubbo:service interface="com.koolearn.club.service.IStudentAccountService" ref="studentAccountService"/>
+
+
+
+
+    <bean id="classService" class="com.koolearn.club.impl.ClassServiceImpl"/>
+    <bean id="classContentService" class="com.koolearn.club.impl.ClassContentServiceImpl"/>
+    <bean id="classNoticeService" class="com.koolearn.club.impl.ClassNoticeServiceImpl"/>
+    <bean id="resourceService" class="com.koolearn.club.impl.ResourceServiceImpl"/>
+    <bean id="signService" class="com.koolearn.club.impl.LearningServiceImpl"/>
+    <bean id="signCommentService" class="com.koolearn.club.impl.LearningCommentServiceImpl"/>
+    <bean id="studentService" class="com.koolearn.club.impl.StudentServiceImpl"/>
+    <bean id="taskService" class="com.koolearn.club.impl.TaskServiceImpl"/>
+    <bean id="teacherService" class="com.koolearn.club.impl.TeacherServiceImpl"/>
+    <bean id="messageService" class="com.koolearn.club.impl.StuMessageServiceImpl"/>
+    <bean id="teachMessageService" class="com.koolearn.club.impl.TeachMessageServiceImpl"/>
+    <bean id="channelService" class="com.koolearn.club.impl.ChannelServiceImpl"/>
+    <bean id="formIdService" class="com.koolearn.club.impl.FormIdServiceImpl"/>
+    <bean id="classCommentService" class="com.koolearn.club.impl.ClassCommentServiceImpl"/>
+    <bean id="classShareRecordService" class="com.koolearn.club.impl.ClassShareRecordServiceImpl"/>
+    <bean id="scheduleService" class="com.koolearn.club.impl.ScheduleServiceImpl"/>
+    <bean id="shareService" class="com.koolearn.club.impl.ShareServiceImpl"/>
+    <bean id="identifyingCodeService" class="com.koolearn.club.impl.IdentifyingCodeServiceImpl"/>
+    <bean id="learningPraiseService" class="com.koolearn.club.impl.LearningPraiseServiceImpl"/>
+    <bean id="studentSettingService" class="com.koolearn.club.impl.StudentSettingServiceImpl"/>
+    <bean id="liveService" class="com.koolearn.club.impl.LiveServiceImpl"/>
+    <bean id="wechatService" class="com.koolearn.club.impl.WechatServiceImpl"/>
+    <bean id="drawAwardService" class="com.koolearn.club.impl.DrawAwardServiceImpl"/>
+    <bean id="activityService" class="com.koolearn.club.impl.ActivityServiceImpl"/>
+    <bean id="teachTokenService" class="com.koolearn.club.impl.TeachTokenServiceImpl"/>
+    <bean id="squareService" class="com.koolearn.club.impl.SquareServiceImpl"/>
+    <bean id="awardRecordService" class="com.koolearn.club.impl.AwardRecordServiceImpl"/>
+    <bean id="commentService" class="com.koolearn.club.impl.CommentServiceImpl"/>
+    <bean id="redPocketRuleService" class="com.koolearn.club.impl.RedPocketRuleServiceImpl"/>
+    <bean id="redPocketRecordService" class="com.koolearn.club.impl.RedPocketRecordServiceImpl"/>
+    <bean id="studentAccountService" class="com.koolearn.club.impl.StudentAccountServiceImpl"/>
+
+
+</beans>

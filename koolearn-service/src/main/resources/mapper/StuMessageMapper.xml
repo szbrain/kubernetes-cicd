@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koolearn.club.mapper.StuMessageMapper">
+  <sql id="Base_Column_List">id, stu_id, class_id, business_id, `type`, create_time, update_time</sql>
+  <resultMap id="BaseResultMap" type="com.koolearn.club.entity.PeStuMessage">
+      <id column="id" property="id" jdbcType="INTEGER"/>
+      <result column="stu_id" property="stuId" jdbcType="INTEGER"/>
+      <result column="class_id" property="classId" jdbcType="INTEGER"/>
+      <result column="business_id" property="businessId" jdbcType="INTEGER"/>
+      <result column="type" property="type" jdbcType="TINYINT"/>
+      <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+      <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_stu_message
+        where id=#{id} and is_delete != 1
+    </select>
+
+    <select id="listMessageForStu" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_stu_message
+        where is_delete !=1 and stu_id = #{stuId} and class_id = #{classId}
+        order by create_time desc
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="countMessageForStu" resultType="java.lang.Integer">
+        select count(id) from pe_stu_message
+        where is_delete !=1 and stu_id = #{stuId}
+    </select>
+
+    <select id="listMessageForTeach" resultMap="BaseResultMap">
+        select DISTINCT class_id, business_id, `type` from pe_stu_message
+        where is_delete !=1 and class_id = #{classId}
+        order by create_time desc
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="countMessageForTeach" resultType="java.lang.Integer">
+        SELECT  count(b.class_id) FROM (select DISTINCT a.class_id, a.business_id, a.`type` from pe_stu_message a
+        where a.is_delete !=1 and a.class_id = #{classId})  b
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.koolearn.club.entity.PeStuMessage">
+        insert into pe_stu_message(
+        stu_id, class_id, business_id, `type`, create_time)
+        values(
+        #{stuId}, #{classId}, #{businessId}, #{type}, #{createTime})
+    </insert>
+
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into pe_stu_message(
+        stu_id, class_id, business_id, `type`, create_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.stuId}, #{item.classId},#{item.businessId},#{item.type},#{item.createTime})
+        </foreach>
+    </insert>
+
+    <select id="getByStuIdClassIdBusinessId" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from pe_stu_message
+        where stu_id=#{stuId} and class_id=#{classId} and business_id=#{businessId} and `type`=#{type} and is_delete != 1
+        limit 1
+    </select>
+
+</mapper>

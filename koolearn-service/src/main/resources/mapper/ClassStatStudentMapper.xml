@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koolearn.club.mapper.ClassStatStudentMapper">
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.koolearn.club.entity.PrClassStatStudent">
+        insert into pr_class_stat_student(
+        class_stat_id, stu_id, `type`
+        )
+        values(
+        #{classStatId}, #{stuId}, #{type}
+        )
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into pr_class_stat_student(
+        class_stat_id, stu_id, `type`
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+          (#{item.classStatId}, #{item.stuId},#{item.type})
+        </foreach>
+    </insert>
+
+
+
+</mapper>

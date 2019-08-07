@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checkout'
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd0bad3f5-87b6-4097-91ed-e27c97cf028d', url: 'http://git.koolearn-inc.com/guonei/demo.git']]])
+            }
+        }
+
+        stage('Maven Build') {
+            steps {
+                echo 'Maven Building'
+                sh 'cd ${module}&&mvn clean package -P${env}  -DskipTests -U'
+            }
+        }
+    }
+}
+podTemplate(label: 'docker-pod',  containers: [
+        containerTemplate(
+                name: 'jnlp',
+                image: 'registry.cn-hangzhou.aliyuncs.com/lvyangjun/jnlp-slave:alpine',
+                args: '${computer.jnlpmac} ${computer.name}',
+                command: ''
+        )
+],volumes: [
+        persistentVolumeClaim(mountPath: '/home/jenkins', claimName: 'jenkins', readOnly: false),
+        hostPathVolume(hostPath: '/var/jenkins_home', mountPath: '/home/jenkins'),
+        hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
+        hostPathVolume(hostPath: '/usr/local/bin/docker', mountPath: '/usr/local/bin/docker'),
+        //hostPathVolume(hostPath: '/usr/local/bin/kubectl', mountPath: '/usr/local/bin/kubectl'),
+        hostPathVolume(hostPath: '/tmp/', mountPath: '/tmp/')
+])
+{
+    node ('docker-pod') {
+
+        container('jnlp') {
+
+            stage('Docker building') {
+                echo 'Docker building ${git_tag}'
+                sh("docker build -t lvyangjun/${module}:${git_tag} --build-arg module=${module} --build-arg jenkins_build_path=./target ${module}")
+                echo 'Docker Login'
+                sh("docker login --username=lvyangjun2010@163.com --password='password' registry.cn-hangzhou.aliyuncs.com")
+                echo 'Docker tag -${git_tag}'
+                sh("docker tag lvyangjun/${module}:${git_tag} registry.cn-hangzhou.aliyuncs.com/lvyangjun/${module}:${git_tag}")
+                echo 'Docker tag'
+                sh("docker push  registry.cn-hangzhou.aliyuncs.com/lvyangjun/${module}:${git_tag}")
+                echo 'kubectl'
+                //sh "cd ${module}&&kubectl apply -f ${module}_rc.yml -n default"
+                sh 'kubectl rolling-update ${module}-controller -n default --image=registry.cn-hangzhou.aliyuncs.com/lvyangjun/${module}:${git_tag}'
+            }
+        }
+    }
+}
+
+
+
