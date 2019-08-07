@@ -2,9 +2,9 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
   <modelVersion>4.0.0</modelVersion>  
-  <groupId>com.koolearn</groupId>  
-  <name>koo-club</name>  
-  <artifactId>koo-club</artifactId>  
+  <groupId>com.kubernetes.cicd</groupId>
+  <name>kubernetes-cicd</name>
+  <artifactId>kubernetes-cicd</artifactId>
   <version>1.0.0-SNAPSHOT</version>  
   <packaging>pom</packaging>  
   <properties> 
@@ -12,9 +12,8 @@
   </properties>  
   <modules>
     <module>api</module>
-    <module>koolearn-eureka</module>
-    <module>koolearn-service</module>
-    <module>koolearn-webapp</module>
+    <module>eureka</module>
+    <module>webapp</module>
     <module>spring-boot-admin-server</module>
   </modules> 
 </project>
